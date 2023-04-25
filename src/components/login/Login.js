@@ -1,24 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import * as L from "./Login.style";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { api } from "../../utils/api";
-import { getLoginInfo, loginAsync} from "./Login.Slice";
+import { loginAsync} from "./Login.Slice";
 
 
 const Login = () => {    
     const dispatch = useDispatch();
     const loginForm = useRef(null);
     const navigate = useNavigate();
-    const loginInfo = useSelector(getLoginInfo);
-
-    useEffect(() => {
-        if(loginInfo.sessionId !== null && loginInfo.sessionId !== '' && loginInfo.sessionId !== undefined){            
-            navigate('/');
-        }else{
-
-        }
-    }, [loginInfo]);
 
     const login = (e) => {
         e.preventDefault();
@@ -31,9 +22,11 @@ const Login = () => {
         }
 
         api.post(`/login`, param, (data) => {
+            localStorage.setItem("sessionId", data.data.sessionId);
             dispatch(loginAsync({ name: data.data.name, sessionId: data.data.sessionId }));
             navigate("/");
         }, (error) => {
+            console.log(error);
             navigate('/login');
         });
     };

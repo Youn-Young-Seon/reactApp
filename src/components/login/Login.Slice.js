@@ -22,9 +22,6 @@ export const loginSlice = createSlice({
     reducers: {
         doLogin: (state, action) => {
             state.login = action.payload;
-        },
-        logout: (state) => {
-            state.login = {};
         }
     },
     extraReducers: (builder) => {
@@ -43,6 +40,6 @@ export const loginSlice = createSlice({
 
 export const getLoginInfo = (state) => state.login;
 
-export const { doLogin, logout } = loginSlice.actions;
+export const { doLogin } = loginSlice.actions;
 
 export default loginSlice.reducer;

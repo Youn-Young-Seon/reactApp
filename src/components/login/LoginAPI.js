@@ -1,7 +1,5 @@
-import { api } from "../../utils/api"
-
 export function fetchLogin(data) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         resolve(data);
     })
 }

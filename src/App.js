@@ -3,21 +3,23 @@ import GlobalStyle from './styles/global';
 import Login from './components/login/Login';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Join from './components/join/Join';
-import { useDispatch, useSelector } from 'react-redux';
-import { getLoginInfo, logout } from './components/login/Login.Slice';
+import { api } from './utils/api';
 
 function App() {
   const navigate = useNavigate();
-  const loginInfo = useSelector(getLoginInfo);
-  const dispatch = useDispatch();
+  const session = localStorage.getItem("sessionId");
 
   useEffect(() => {
-    if(loginInfo.login.sessionId === null || loginInfo.login.sessionId === '' || loginInfo.login.sessionId === undefined){
-      navigate('/login');
-    }else{
-      navigate('/');
-    }
-  }, [loginInfo])  
+    (session) ? navigate('/') : navigate('/login')
+  }, [])  
+
+  const logout = () => {
+    localStorage.removeItem("sessionId");
+    api.post("/logout", null, (data) => {
+      console.log(data);
+    });
+    navigate('/login');
+  }
 
   return (
     <>
@@ -25,7 +27,7 @@ function App() {
       <Routes>
           <Route path='/login' element={<Login/>} />
           <Route path="/join" element={<Join/>}/>
-          <Route path="/" element={<><button onClick={() => dispatch(logout())}>logout</button>{ loginInfo.login.name }</>}/>
+          <Route path="/" element={<><button onClick={ logout }>logout</button></>}/>
       </Routes>
     </>
   );
